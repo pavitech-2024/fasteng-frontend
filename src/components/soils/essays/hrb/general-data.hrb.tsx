@@ -22,45 +22,10 @@ const HRB_GeneralData = ({ nextDisabled, setNextDisabled, hrb }: EssayPageProps 
   useEffect(() => {
     toast.promise(
       async () => {
-        try {
-          const response = await hrb.getSamplesByUserId(user._id);
-          
-          console.log('📦 Resposta da API (HRB):', response); // Debug
-          
-          // 🔥 Lógica flexível para extrair o array de SoilSample[]
-          let samplesList: SoilSample[] = [];
-          
-          if (!response) {
-            console.warn('⚠️ Resposta vazia');
-            samplesList = [];
-          } else if (Array.isArray(response)) {
-            // Se for array
-            if (response.length > 0) {
-              // Verifica se o primeiro item tem 'materials'
-              if (response[0]?.materials && Array.isArray(response[0].materials)) {
-                samplesList = response[0].materials;
-              } else {
-                // É um array direto de SoilSample
-                samplesList = response;
-              }
-            }
-          } else if (typeof response === 'object' && 'materials' in response) {
-            // Se for um objeto com propriedade materials
-            const materials = (response as any).materials;
-            if (Array.isArray(materials)) {
-              samplesList = materials;
-            }
-          }
-          
-          console.log('✅ Lista de amostras (HRB):', samplesList); // Debug
-          setSamples(samplesList);
-          setLoading(false);
-        } catch (error) {
-          console.error('❌ Erro ao buscar amostras:', error);
-          setSamples([]);
-          setLoading(false);
-          throw error;
-        }
+        const samples = await hrb.getSamplesByUserId(user._id);
+
+        /*setSamples(samples[0].materials);*/
+        setSamples(samples?.[0]?.materials ?? []);        setLoading(false);
       },
       {
         pending: t('loading.samples.pending'),
