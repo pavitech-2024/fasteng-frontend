@@ -4,6 +4,7 @@ import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { t } from 'i18next';
 import { Box, TextField } from '@mui/material';
 import DropDown, { DropDownOption } from '@/components/atoms/inputs/dropDown';
+import { useEffect } from 'react';
 
 const Marshall_Step1_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const { generalData, setData } = useMarshallStore();
@@ -23,6 +24,20 @@ const Marshall_Step1_GeneralData = ({ nextDisabled, setNextDisabled }: EssayPage
     { label: t('asphalt.dosages.marshall.bonding-layer'), value: 'bonding' },
   ];
 
+  useEffect(() => {
+  const allRequiredFieldsFilled = inputs.every(({ required, value }) => {
+    if (!required) return true;
+    if (value === null || value === undefined) return false;
+    if (typeof value === 'string' && value.trim() === '') return false;
+    return true;
+  });
+
+  if (allRequiredFieldsFilled && nextDisabled) {
+    setNextDisabled(false);
+  } else if (!allRequiredFieldsFilled && !nextDisabled) {
+    setNextDisabled(true);
+  }
+}, [generalData, nextDisabled, setNextDisabled]);
   // Função para verificar se todos os campos obrigatórios estão preenchidos
   const allRequiredFieldsFilled = inputs.every(({ required, value }) => {
     if (!required) return true;

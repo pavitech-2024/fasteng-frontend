@@ -37,6 +37,8 @@ interface Step2Props {
   header?: string;
   rows: Array<{ _id: string; name: string; type: string; missingEssays?: string[] }>;
   columns: GridColDef[];
+  essaysByMaterial?: Record<string, string[]>;
+  essaysLoading?: boolean;
 }
 
 export const getRequiredEssayLabels = (materialType: string): string[] =>
@@ -54,7 +56,7 @@ export const buildMissingEssaySummary = (
     .join('\n');
 };
 
-const Step2Table = ({ rows, columns, header }: Step2Props & { marshall: Marshall_SERVICE }) => {
+const Step2Table = ({ rows, columns, header, essaysByMaterial, essaysLoading }: Step2Props & { marshall: Marshall_SERVICE }) => {
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
   const { setData } = useMarshallStore();
 

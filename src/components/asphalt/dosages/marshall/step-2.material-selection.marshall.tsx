@@ -6,11 +6,13 @@ import materialsService from '@/services/asphalt/asphalt-materials.service';
 import Marshall_SERVICE from '@/services/asphalt/dosages/marshall/marshall.service';
 import useMarshallStore from '@/stores/asphalt/marshall/marshall.store';
 import { Box } from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import MaterialSelectionTable from './tables/step-2-table';
-import { GridColDef } from '@mui/x-data-grid';
+
+
 
 const REQUIRED_ESSAYS: Record<string, { key: string; label: string }[]> = {
   coarseAggregate: [
@@ -29,6 +31,38 @@ const REQUIRED_ESSAYS: Record<string, { key: string; label: string }[]> = {
   asphaltBinder: [{ key: 'viscosityRotational', label: 'viscosidade rotacional' }],
 };
 
+const AGGREGATE_TYPES = ['coarseAggregate', 'fineAggregate', 'filler', 'other'];
+const BINDER_TYPES = ['CAP', 'asphaltBinder'];
+
+const isAsphaltMaterial = (obj: any): boolean =>
+  Boolean(obj && typeof obj === 'object' && obj._id && obj.name && obj.type && obj.userId);
+
+/** A resposta do endpoint varia de formato; aqui ela é normalizada num array. */
+const extractMaterials = (response: any): AsphaltMaterial[] => {
+  if (Array.isArray(response)) {
+    if (response.length === 0) return [];
+    if (isAsphaltMaterial(response[0])) return response as AsphaltMaterial[];
+
+    const nested = Object.values(response[0] ?? {}).find(
+      (value) => Array.isArray(value) && value.length > 0 && isAsphaltMaterial(value[0])
+    );
+
+    return (nested as AsphaltMaterial[]) ?? [];
+  }
+
+  if (response && typeof response === 'object') {
+    if (isAsphaltMaterial(response)) return [response as AsphaltMaterial];
+
+    const nested = Object.values(response).find(
+      (value) => Array.isArray(value) && value.length > 0 && isAsphaltMaterial(value[0])
+    );
+
+    return (nested as AsphaltMaterial[]) ?? [];
+  }
+
+  return [];
+};
+
 const Marshall_Step2_MaterialSelection = ({
   nextDisabled,
   setNextDisabled,
@@ -36,63 +70,40 @@ const Marshall_Step2_MaterialSelection = ({
 }: EssayPageProps & { marshall: Marshall_SERVICE }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materials, setMaterials] = useState<AsphaltMaterial[]>([]);
-  const [materialEssayMap, setMaterialEssayMap] = useState<Record<string, string[]>>({});
-  const { materialSelectionData } = useMarshallStore();
+  const [essaysByMaterial, setEssaysByMaterial] = useState<Record<string, string[]>>({});
+  const [essaysLoading, setEssaysLoading] = useState<boolean>(true);
 
+  const { materialSelectionData } = useMarshallStore();
   const { user } = useAuth();
 
+  // StrictMode monta o componente duas vezes em dev: sem a trava, a lista de
+  // materiais era buscada duas vezes a cada abertura.
+  const materialsFetched = useRef(false);
+
+  const renderCount = useRef(0);
+renderCount.current += 1;
+console.log('[step2] render', renderCount.current, 'mount?', renderCount.current === 1);
+
+useEffect(() => {
+  console.log('[step2] MONTOU');
+  return () => console.log('[step2] DESMONTOU');
+}, []);
+
   useEffect(() => {
+    if (materialsFetched.current) return;
+    materialsFetched.current = true;
+
     toast.promise(
       async () => {
         try {
           const response = await marshall.getmaterialsByUserId(user._id);
-
-          let extractedMaterials: AsphaltMaterial[] = [];
-
-          const isAsphaltMaterial = (obj: any): boolean => {
-            return obj && typeof obj === 'object' && obj._id && obj.name && obj.type && obj.userId;
-          };
-
-          if (Array.isArray(response)) {
-            if (response.length > 0) {
-              if (isAsphaltMaterial(response[0])) {
-                extractedMaterials = response as AsphaltMaterial[];
-              } else if (response[0] && typeof response[0] === 'object') {
-                const firstItem = response[0];
-                const objectKeys = Object.keys(firstItem);
-
-                for (const key of objectKeys) {
-                  const value = firstItem[key];
-                  if (Array.isArray(value) && value.length > 0 && isAsphaltMaterial(value[0])) {
-                    extractedMaterials = value as AsphaltMaterial[];
-                    break;
-                  }
-                }
-              }
-            }
-          } else if (response && typeof response === 'object') {
-            if (isAsphaltMaterial(response)) {
-              extractedMaterials = [response as AsphaltMaterial];
-            } else {
-              const objectKeys = Object.keys(response);
-
-              for (const key of objectKeys) {
-                const value = (response as any)[key];
-                if (Array.isArray(value) && value.length > 0 && isAsphaltMaterial(value[0])) {
-                  extractedMaterials = value as AsphaltMaterial[];
-                  break;
-                }
-              }
-            }
-          }
-
-          setMaterials(extractedMaterials);
-          setLoading(false);
+          setMaterials(extractMaterials(response));
         } catch (error) {
-          console.error('💥 Erro ao buscar materiais:', error);
+          console.error('Erro ao buscar materiais:', error);
           setMaterials([]);
-          setLoading(false);
           throw error;
+        } finally {
+          setLoading(false);
         }
       },
       {
@@ -101,23 +112,42 @@ const Marshall_Step2_MaterialSelection = ({
         error: t('loading.materials.error'),
       }
     );
-  }, [user._id, marshall]);
+    // marshall fora das deps de propósito: se o pai recria a instância a cada
+    // render, a dependência sozinha já reinicia a busca em loop.
+  }, [user._id]);
+
+  /**
+   * Identidade da lista como string. Depender de `materials` (um array novo a
+   * cada render) fazia o efeito rodar sem parar: cada busca chamava setState,
+   * o setState re-renderizava, e o array virava outra referência — N
+   * requisições por ciclo, sem fim.
+   */
+  const materialIds = useMemo(() => materials.map(({ _id }) => _id).join(','), [materials]);
+
+  const essaysFetchedFor = useRef<string>('');
 
   useEffect(() => {
-    if (!materials.length) {
-      setMaterialEssayMap({});
+    if (essaysFetchedFor.current === materialIds) return;
+    essaysFetchedFor.current = materialIds;
+
+    if (!materialIds) {
+      // Só troca o estado se houver algo para limpar: `setEssaysByMaterial({})`
+      // incondicional cria objeto novo e provoca outro render.
+      setEssaysByMaterial((prev) => (Object.keys(prev).length === 0 ? prev : {}));
+      setEssaysLoading(false);
       return;
     }
 
     let isMounted = true;
+    setEssaysLoading(true);
 
     Promise.all(
       materials.map(async (material) => {
         try {
           const response = await materialsService.getMaterial(material._id);
           const essays = Array.isArray(response?.data?.essays) ? response.data.essays : [];
-          const essayNames = essays.map((essay: { essayName?: string }) => essay.essayName).filter(Boolean);
-          return [material._id, essayNames] as const;
+          const names = essays.map((essay: { essayName?: string }) => essay.essayName).filter(Boolean);
+          return [material._id, names] as const;
         } catch (error) {
           console.warn(`Não foi possível carregar ensaios do material ${material._id}:`, error);
           return [material._id, []] as const;
@@ -125,69 +155,42 @@ const Marshall_Step2_MaterialSelection = ({
       })
     )
       .then((entries) => {
-        if (!isMounted) return;
-        setMaterialEssayMap(Object.fromEntries(entries));
+        if (isMounted) setEssaysByMaterial(Object.fromEntries(entries));
       })
       .catch((error) => {
         console.error('Erro ao montar estado dos ensaios dos materiais:', error);
+        // Libera nova tentativa quando a lista mudar.
+        essaysFetchedFor.current = '';
+      })
+      .finally(() => {
+        if (isMounted) setEssaysLoading(false);
       });
 
     return () => {
       isMounted = false;
     };
-  }, [materials]);
+  }, [materialIds]);
 
-  const getMaterialMissingEssays = (material: AsphaltMaterial): string[] => {
-    const existingEssayNames = materialEssayMap[material._id] ?? [];
-    const requiredEssays = REQUIRED_ESSAYS[material.type] ?? [];
+  const missingEssaysOf = (material: { _id: string; type: string }): string[] => {
+    // Enquanto a consulta roda, não acusar falta: a tela piscava "sem ensaio"
+    // em tudo e depois corrigia.
+    if (essaysLoading) return [];
 
-    return requiredEssays
-      .filter(({ key }) => !existingEssayNames.includes(key))
-      .map(({ key }) => key);
+    const existing = essaysByMaterial[material._id] ?? [];
+    return (REQUIRED_ESSAYS[material.type] ?? []).filter(({ key }) => !existing.includes(key)).map(({ key }) => key);
   };
 
-  const aggregateRows = materials
-    .map((material) => ({
-      _id: material._id,
-      name: material.name,
-      type: material.type,
-      missingEssays: getMaterialMissingEssays(material),
-    }))
-    .filter(({ type }) => ['coarseAggregate', 'fineAggregate', 'filler', 'other'].includes(type));
+  const rowsOf = (types: string[]) =>
+    materials
+      .filter(({ type }) => types.includes(type))
+      .map(({ _id, name, type }) => ({ _id, name, type, missingEssays: missingEssaysOf({ _id, type }) }));
 
-  const aggregateColumns: GridColDef[] = [
-    {
-      field: 'name',
-      headerName: t('name'),
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'type',
-      headerName: t('type'),
-      valueFormatter: ({ value }) => t(`asphalt.materials.${value}`),
-    },
-  ];
+  const aggregateRows = useMemo(() => rowsOf(AGGREGATE_TYPES), [materials, essaysByMaterial, essaysLoading]);
+  const binderRows = useMemo(() => rowsOf(BINDER_TYPES), [materials, essaysByMaterial, essaysLoading]);
 
-  const binderRows = materials
-    .map((material) => ({
-      _id: material._id,
-      name: material.name,
-      type: material.type,
-      missingEssays: getMaterialMissingEssays(material),
-    }))
-    .filter(({ type }) => ['CAP', 'asphaltBinder'].includes(type));
-
-  const binderColumns: GridColDef[] = [
-    {
-      field: 'name',
-      headerName: t('asphalt.materials.name'),
-      valueFormatter: ({ value }) => `${value}`,
-    },
-    {
-      field: 'type',
-      headerName: t('asphalt.materials.type'),
-      valueFormatter: ({ value }) => t(`asphalt.materials.${value}`),
-    },
+  const columns: GridColDef[] = [
+    { field: 'name', headerName: t('name'), valueFormatter: ({ value }) => `${value}` },
+    { field: 'type', headerName: t('type'), valueFormatter: ({ value }) => t(`asphalt.materials.${value}`) },
   ];
 
   useEffect(() => {
@@ -201,33 +204,28 @@ const Marshall_Step2_MaterialSelection = ({
     }
   }, [materialSelectionData, nextDisabled, setNextDisabled]);
 
+  if (loading) return <Loading />;
+
   return (
-    <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px',
-          }}
-        >
-          <MaterialSelectionTable
-            rows={aggregateRows}
-            columns={aggregateColumns}
-            header={t('asphalt.materials.aggregates')}
-            marshall={marshall}
-          />
-          <MaterialSelectionTable
-            rows={binderRows}
-            columns={binderColumns}
-            header={t('asphalt.materials.binders')}
-            marshall={marshall}
-          />
-        </Box>
-      )}
-    </>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <MaterialSelectionTable
+        rows={aggregateRows}
+        columns={columns}
+        header={t('asphalt.materials.aggregates')}
+        essaysByMaterial={essaysByMaterial}
+        essaysLoading={essaysLoading}
+        marshall={marshall}
+      />
+
+      <MaterialSelectionTable
+        rows={binderRows}
+        columns={columns}
+        header={t('asphalt.materials.binders')}
+        essaysByMaterial={essaysByMaterial}
+        essaysLoading={essaysLoading}
+        marshall={marshall}
+      />
+    </Box>
   );
 };
 
