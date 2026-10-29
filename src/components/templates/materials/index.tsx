@@ -23,7 +23,7 @@ import { t } from 'i18next';
 import Link from 'next/link';
 import { Edit, ModeEdit, Visibility } from '@mui/icons-material';
 import { FWDAnalysis } from '@/stores/asphalt/fwd/fwd.store';
-import { IggData } from '@/stores/asphalt/igg/igg.store';
+import { IggAnalysisData } from '@/stores/asphalt/igg/igg.store';
 import { RtcdData } from '@/stores/asphalt/rtcd/rtcd.store';
 import { DduiData } from '@/stores/asphalt/ddui/ddui.store';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
@@ -35,7 +35,7 @@ export type essayTypes = 'rtcd' | 'ddui' | 'fwd' | 'igg';
 interface MaterialsTemplateProps {
   materials: any[] | undefined;
   fwdEssays?: FWDAnalysis[] | undefined;
-  iggEssays?: IggData[] | undefined;
+  iggEssays?: IggAnalysisData[] | undefined;
   dduiEssays?: DduiData[] | undefined;
   rtcdEssays?: RtcdData[] | undefined;
   types: DropDownOption[];
