@@ -1,9 +1,9 @@
+import { Box, Button, MenuItem, TextField } from '@mui/material';
 import { AddIcon, DeleteIcon, EditIcon } from '@/assets';
 import CreateEditMaterialModal from '@/components/templates/modals/createEditAsphaltMaterial';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
 import { AllSievesSuperpaveUpdatedAstm } from '@/interfaces/common';
 import useSuperpaveStore from '@/stores/asphalt/superpave/superpave.store';
-import { Box, Button } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import materialsService from '@/services/asphalt/asphalt-materials.service';
@@ -68,6 +68,9 @@ const CreateMaterialDosageTable = ({ onRowClick }: ICreateMaterialDosageTable) =
         aggregateNature: material.description.aggregateNature,
         boughtDate: material.description.boughtDate,
         observation: material.description.observation,
+        data: [],
+        materials: [],
+        fromRegistry: (material as any).fromRegistry ?? false,
       },
       name: material.name,
       type: material.type,
@@ -228,6 +231,28 @@ const CreateMaterialDosageTable = ({ onRowClick }: ICreateMaterialDosageTable) =
     }
   }, [data.materials]);
 
+<<<<<<< Updated upstream
+=======
+const [registered, setRegistered] = useState<AsphaltMaterial[]>([]);
+
+useEffect(() => {
+  console.log('buscando materiais...');
+  fetchMaterials()
+    .then((result) => {
+      console.log('materiais cadastrados:', result);
+      setRegistered(Array.isArray(result) ? result : []);
+    })
+    .catch((e) => console.error('Failed to fetch registered materials:', e));
+}, []);
+const available = registered.filter((m) => !data.materials?.some((added) => added._id === m._id));
+
+const handleSelectRegistered = (id: string) => {
+  const material = registered.find((m) => m._id === id);
+  if (!material) return;
+  addNewMaterial({ ...material, fromRegistry: true } as AsphaltMaterial);
+};
+
+>>>>>>> Stashed changes
   return (
     <Box>
       <DeleteMaterialModal
@@ -240,6 +265,7 @@ const CreateMaterialDosageTable = ({ onRowClick }: ICreateMaterialDosageTable) =
         }}
         searchBy={'name'}
       />
+<<<<<<< Updated upstream
       <Button
         onClick={() => setModalIsOpen(true)}
         variant="contained"
@@ -247,6 +273,39 @@ const CreateMaterialDosageTable = ({ onRowClick }: ICreateMaterialDosageTable) =
       >
         <AddIcon /> Novo Material
       </Button>
+=======
+       <Box
+        sx={{
+          display: 'flex',
+          gap: '1rem',
+          marginY: '1rem',
+          padding: '1rem',
+        }}
+      >
+        <Button
+          variant="contained"
+          onClick={() => setModalIsOpen(true)}
+        >
+          Criar novo material
+        </Button>
+
+    <TextField
+     select
+     size="small"
+     label="Usar material cadastrado"
+     value=""
+     onChange={(e) => handleSelectRegistered(e.target.value)}
+     sx={{ minWidth: 280 }}
+    disabled={available.length === 0}
+    >
+  {available.map((m) => (
+    <MenuItem key={m._id} value={m._id}>
+      {m.name} | {t('asphalt.materials.' + m.type)}
+    </MenuItem>
+  ))}
+</TextField>
+      </Box>
+>>>>>>> Stashed changes
 
       {data.materials?.length > 0 && (
         <DataGrid

@@ -153,17 +153,17 @@ class Superpave_SERVICE implements IEssayService {
   };
 
   // get all materials from user, that have the dosage essays
-  getmaterialsByUserId = async (userId: string): Promise<AsphaltMaterial> => {
-    try {
-      const response = await Api.get(`${this.info.backend_path}/material-selection/${userId}`);
+get_materialsByUserId = async (userId: string): Promise<AsphaltMaterial[]> => {
+  try {
+    const response = await Api.get(
+      `${this.info.backend_path}/material-selection/${userId}`
+    );
 
-      const { materials, success, error } = response.data;
-      if (success === false) throw error.name;
-      else return materials;
-    } catch (error) {
-      throw error;
-    }
-  };
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
   /**
    * Gets all materials from user, that have the dosage essays
