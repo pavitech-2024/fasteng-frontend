@@ -1,6 +1,6 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import useIggStore from '@/stores/asphalt/igg/igg.store';
+import { UseIggStore } from '@/stores/asphalt/igg/igg.store';
 import { Box, Button } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { t } from 'i18next';
@@ -8,16 +8,13 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const Igg_Step4 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { iggStep4: data, setData } = useIggStore();
 
-  const [localRows, setLocalRows] = useState(data.sections.map((row, index) => ({ ...row, id: index })));
+  const { sections, setSections } = UseIggStore();
 
-  useEffect(() => {
-    if (nextDisabled) {
-      const hasEmptyValues = localRows.some((item) => Object.values(item).some((value) => value === null));
-      if (!hasEmptyValues) setNextDisabled(false);
-    }
-  }, [localRows, nextDisabled, setNextDisabled]);
+  const [localRows, setLocalRows] = useState(
+    sections.map((row) => ({ ...row }))
+  );
+
 
   const handleAdd = () => {
     const maxId = localRows.length > 0 ? Math.max(...localRows.map((row) => row.id)) : 0;
@@ -27,7 +24,7 @@ const Igg_Step4 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       final: null,
     };
     const newRows = [...localRows, newRow];
-    setData({ step: 3, key: 'sections', value: newRows });
+    setSections(newRows);
     setLocalRows((prevRows) => [...prevRows, newRow]);
     setNextDisabled(false);
   };
@@ -37,7 +34,7 @@ const Igg_Step4 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
       if (localRows.length > 1) {
         const newRows = [...localRows];
         newRows.pop();
-        setData({ step: 3, key: 'sections', value: newRows });
+        setSections(newRows);
         setLocalRows((prevRows) => [...prevRows.slice(0, -1)]);
       } else throw t('igg.error.minReads');
     } catch (error) {
@@ -87,7 +84,7 @@ const Igg_Step4 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
                 return r;
               });
 
-              setData({ step: 3, key: 'sections', value: newRows });
+              setSections(newRows);
               setLocalRows(newRows);
             }}
           />
@@ -117,7 +114,7 @@ const Igg_Step4 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
                 }
                 return r;
               });
-              setData({ step: 3, key: 'sections', value: newRows });
+              setSections(newRows);
               setLocalRows(newRows);
             }}
           />
