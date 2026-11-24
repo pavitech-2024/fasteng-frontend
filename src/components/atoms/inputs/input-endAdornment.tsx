@@ -1,60 +1,72 @@
-import { FormControl, Input, InputLabel, InputAdornment } from '@mui/material';
+import { FormControl, Input, InputLabel, InputAdornment, InputBaseComponentProps } from '@mui/material';
+import { SxProps, Theme } from '@mui/material/styles';
 import React from 'react';
 
 interface Props {
-  onBlur?: (e) => void;
+  id?: string;
   variant?: 'standard' | 'outlined' | 'filled';
-  key?: string;
   label?: string;
   placeholder?: string;
   adornment: string;
   value: unknown;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   type?: string;
-  inputProps?: unknown;
+  inputProps?: InputBaseComponentProps;
   required?: boolean;
-  sx?: unknown;
+  sx?: SxProps<Theme>;
   fullWidth?: boolean;
   readOnly?: boolean;
   focused?: boolean;
   disabled?: boolean;
+  error?: boolean;
 }
 
 const InputEndAdornment = ({
+  id,
   variant,
-  key,
   label,
   placeholder,
   adornment,
   value,
   onChange,
   onBlur,
+  onFocus,
+  onKeyDown,
   type,
   inputProps,
   required,
   sx,
   fullWidth,
-  readOnly,
+  readOnly = false,
   focused,
-  disabled = false
+  disabled = false,
+  error = false,
 }: Props) => {
+  const inputId = `adornment-${id ?? label ?? adornment}`;
+
   return (
-    <FormControl focused={focused} variant={variant} key={key} fullWidth={fullWidth}>
-      {label && <InputLabel htmlFor={`outlined-adornment-${key}`}>{label}</InputLabel>}
+    <FormControl focused={focused} variant={variant} fullWidth={fullWidth} error={error} disabled={disabled}>
+      {label && <InputLabel htmlFor={inputId}>{label}</InputLabel>}
       <Input
+        id={inputId}
         fullWidth={fullWidth}
-        onBlur={onBlur}
         required={required}
         placeholder={placeholder}
-        id={`outlined-adornment-${key}`}
         endAdornment={<InputAdornment position="end">{adornment}</InputAdornment>}
         value={value}
         onChange={onChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        onKeyDown={onKeyDown}
         type={type}
         inputProps={inputProps}
         sx={sx}
-        readOnly={readOnly ? readOnly : false}
+        readOnly={readOnly}
         disabled={disabled}
+        error={error}
       />
     </FormControl>
   );

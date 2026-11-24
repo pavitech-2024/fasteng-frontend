@@ -17,6 +17,7 @@ interface SuperpaveGeneralData {
 
 interface SuperpaveGranulometryEssayData {
   materials: AsphaltMaterial[];
+  sieve_series: { label: string; value: number }[];
   granulometrys: {
     material: AsphaltMaterial;
     material_mass: number;
@@ -497,6 +498,7 @@ const initialState = {
   },
   granulometryEssayData: {
     materials: [],
+     sieve_series: [],
     granulometrys: [],
     viscosity: null,
   },

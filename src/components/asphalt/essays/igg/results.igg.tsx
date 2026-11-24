@@ -2,14 +2,14 @@ import React, { useEffect } from 'react';
 import FlexColumnBorder from '@/components/atoms/containers/flex-column-with-border';
 import ExperimentResume, { ExperimentResumeData } from '@/components/molecules/boxes/experiment-resume';
 import { EssayPageProps } from '@/components/templates/essay';
-import useIggStore from '@/stores/asphalt/igg/igg.store';
+import { UseIggStore } from '@/stores/asphalt/igg/igg.store';
 import { t } from 'i18next';
 import { Box } from '@mui/material';
 import Chart from 'react-google-charts';
 import IggResultsTable from './tables/results-table.igg';
 
 const IggResults = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
-  const { results, generalData, iggStep4 } = useIggStore();
+  const { results, generalData, sections } = UseIggStore();
 
   useEffect(() => {
     if (nextDisabled) {
@@ -17,56 +17,46 @@ const IggResults = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
     }
   }, [nextDisabled, setNextDisabled]);
 
-  const { arrowsAverage, variancesAverage, iggs, igis, conditions } = results || {};
+  const iggs = results?.iggs ?? [];
+  const igis = results?.igis ?? [];
+  const arrowsAverage = results?.arrowsAverage ?? [];
+  const variancesAverage = results?.variancesAverage ?? [];
+  const conditions = results?.conditions ?? [];
+
+  if (!igis.length) {
+    return <p>Resultados por trecho indisponíveis. Tente novamente.</p>;
+  }
+
   const { name: experimentName } = generalData || {};
 
   const experimentResumeData: ExperimentResumeData = {
     experimentName,
   };
-  // Pegando indice maior de IGG
-  const getMaxIndexIGG = (props) => {
+
+  // Índice do maior e do menor IGG
+  const getMaxIndexIGG = (props: number[]) => {
     let maxIndex = 0;
     for (let i = 0; i < props.length; i++) if (props[i] > props[maxIndex]) maxIndex = i;
     return maxIndex;
   };
 
-  // Pegando indice menor de IGG
-  const getMinIndexIGG = (props) => {
+  const getMinIndexIGG = (props: number[]) => {
     let minIndex = 0;
     for (let i = 0; i < props.length; i++) if (props[i] < props[minIndex]) minIndex = i;
     return minIndex;
   };
 
-  const minIndexIGG = getMinIndexIGG(iggs || []);
-  const maxIndexIGG = getMaxIndexIGG(iggs || []);
+  const minIndexIGG = getMinIndexIGG(iggs);
+  const maxIndexIGG = getMaxIndexIGG(iggs);
 
-  // definindo dados para os gráficos de pizza
-  const dataSmallerChart = [
+  // dados para os gráficos de pizza
+  const buildPieData = (index: number) => [
     ['number', 'value'],
-    ['1', results.igis[minIndexIGG][0]],
-    ['2', results.igis[minIndexIGG][1]],
-    ['3', results.igis[minIndexIGG][2]],
-    ['4', results.igis[minIndexIGG][3]],
-    ['5', results.igis[minIndexIGG][4]],
-    ['6', results.igis[minIndexIGG][5]],
-    ['7', results.igis[minIndexIGG][6]],
-    ['8', results.igis[minIndexIGG][7]],
-    ['9', results.igis[minIndexIGG][8]],
-    ['10', results.igis[minIndexIGG][9]],
+    ...igis[index].slice(0, 10).map((value, i) => [String(i + 1), value]),
   ];
-  const dataBiggerChart = [
-    ['number', 'value'],
-    ['1', results.igis[maxIndexIGG][0]],
-    ['2', results.igis[maxIndexIGG][1]],
-    ['3', results.igis[maxIndexIGG][2]],
-    ['4', results.igis[maxIndexIGG][3]],
-    ['5', results.igis[maxIndexIGG][4]],
-    ['6', results.igis[maxIndexIGG][5]],
-    ['7', results.igis[maxIndexIGG][6]],
-    ['8', results.igis[maxIndexIGG][7]],
-    ['9', results.igis[maxIndexIGG][8]],
-    ['10', results.igis[maxIndexIGG][9]],
-  ];
+
+  const dataSmallerChart = buildPieData(minIndexIGG);
+  const dataBiggerChart = buildPieData(maxIndexIGG);
 
   const optionsSmaller = {
     title: `Contribuição de cada defeito no IGG - SH-${minIndexIGG + 1}`,
@@ -76,33 +66,36 @@ const IggResults = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
     title: `Contribuição de cada defeito no IGG - SH-${maxIndexIGG + 1}`,
   };
 
+  const toFixed2 = (value: unknown) => (value !== null && value !== undefined ? Number(value).toFixed(2) : null);
+
   return (
     <>
       <ExperimentResume data={experimentResumeData} />
       <FlexColumnBorder title={t('results')} open={true}>
         <IggResultsTable
-          rows={(iggs || []).map((value: unknown, index: number) => {
-            const section = iggStep4?.sections[index];
-            const initialStake = section?.initial;
-            const finalStake = section?.final;
-            const extension = initialStake && finalStake ? (finalStake - initialStake) * 20 : null;
+          rows={iggs.map((value: number, index: number) => {
+            const section = sections?.[index];
+            const initialStake = section?.initial ?? null;
+            const finalStake = section?.final ?? null;
+            const extension = initialStake !== null && finalStake !== null ? (finalStake - initialStake) * 20 : null;
+
             return {
               id: index + 1,
-              initialStake: initialStake !== null ? Number(initialStake).toFixed(2) : null,
-              finalStake: finalStake !== null ? Number(finalStake).toFixed(2) : null,
-              extension: extension !== null ? Number(extension).toFixed(2) : null,
-              FC1: Number(igis[index][0]).toFixed(2),
-              FC2: Number(igis[index][1]).toFixed(2),
-              ALP: Number(igis[index][2]).toFixed(2),
-              ATP: Number(igis[index][3]).toFixed(2),
-              OEP: Number(igis[index][4]).toFixed(2),
-              Ex: Number(igis[index][5]).toFixed(2),
-              D: Number(igis[index][6]).toFixed(2),
-              R: Number(igis[index][7]).toFixed(2),
-              arrowsAverage: arrowsAverage[index] !== null ? Number(arrowsAverage[index]).toFixed(2) : null,
-              variancesAverage: variancesAverage[index] !== null ? Number(variancesAverage[index]).toFixed(2) : null,
-              igg: value !== null ? Number(value).toFixed(2) : null,
-              concept: conditions[0],
+              initialStake: toFixed2(initialStake),
+              finalStake: toFixed2(finalStake),
+              extension: toFixed2(extension),
+              FC1: toFixed2(igis[index][0]),
+              FC2: toFixed2(igis[index][1]),
+              ALP: toFixed2(igis[index][2]),
+              ATP: toFixed2(igis[index][3]),
+              OEP: toFixed2(igis[index][4]),
+              Ex: toFixed2(igis[index][5]),
+              D: toFixed2(igis[index][6]),
+              R: toFixed2(igis[index][7]),
+              arrowsAverage: toFixed2(arrowsAverage[index]),
+              variancesAverage: toFixed2(variancesAverage[index]),
+              igg: toFixed2(value),
+              concept: conditions[index] ?? null,
             };
           })}
           columns={[
@@ -155,7 +148,7 @@ const IggResults = ({ setNextDisabled, nextDisabled }: EssayPageProps) => {
               headerAlign: 'center',
               minWidth: 165,
             },
-            { field: 'igg', headerName: 'IGG (%', flex: 1, align: 'center', headerAlign: 'center', minWidth: 70 },
+            { field: 'igg', headerName: 'IGG (%)', flex: 1, align: 'center', headerAlign: 'center', minWidth: 70 },
             { field: 'concept', headerName: 'Conceito', flex: 1, align: 'center', headerAlign: 'center', minWidth: 80 },
           ]}
         />

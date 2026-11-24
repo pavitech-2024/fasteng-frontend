@@ -35,8 +35,8 @@ const Login: NextPage = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const roxApiUrl = 'https://minhaconta.fastengapp.com.br/api/forgot-password ';
-  const [roxIsRunning, setRoxIsRunning] = useState(true);
+  const forgotPasswordUrl = 'https://fasteng-backend.vercel.app/api/forgot-password';
+  const [isBackendRunning, setIsBackendRunning] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
@@ -62,12 +62,21 @@ const Login: NextPage = () => {
     const handleHealthCheck = async () => {
       try {
         const result = await Api.get('/app/health-check');
+        
+        console.log('✅ Health Check Full Response:', result);
+        console.log('✅ Health Check Data:', result.data);
 
-        if (result.data.status !== 'success') {
-          setRoxIsRunning(false);
+        // Se a resposta é um status 200-299, consideramos o backend como ativo
+        if (result.status >= 200 && result.status < 300) {
+          console.log('✅ Backend is running');
+          setIsBackendRunning(true);
+        } else {
+          console.warn('⚠️ Backend returned unexpected status:', result.status);
+          setIsBackendRunning(false);
         }
       } catch (error) {
-        console.error(error);
+        console.error('❌ Health check failed:', error);
+        setIsBackendRunning(false);
       }
     };
     handleHealthCheck();
@@ -90,7 +99,7 @@ const Login: NextPage = () => {
     toast.promise(
       async () => {
         try {
-          const { data } = await axios.post(`${roxApiUrl}`, { email });
+          const { data } = await axios.post(`${forgotPasswordUrl}`, { email });
 
           if (!data.status) {
             throw new Error(data.message);
@@ -239,7 +248,7 @@ const Login: NextPage = () => {
               bottom: { desktop: 'auto', mobile: '15vh' },
             }}
           >
-            {roxIsRunning ? (
+            {isBackendRunning ? (
               <Box
                 sx={{
                   display: 'flex',

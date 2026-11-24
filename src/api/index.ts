@@ -1,11 +1,9 @@
 import Axios from 'axios';
-
-// env
-export const isLocalHost = process.env.NEXT_PUBLIC_ENV === 'development';
-export const isTest = process.env.NEXT_PUBLIC_ENV === 'test';
-export const isProd = process.env.NEXT_PUBLIC_ENV === 'production';
-
-// URLs por ambiente
+//env 
+export const isLocalHost = process.env.NODE_ENV === 'development';
+export const isTest = process.env.NODE_ENV === 'test';
+export const isProd = process.env.NODE_ENV === 'production';
+//URls por ambiente
 const BASE_URL = isLocalHost
   ? 'http://localhost:8080'
   : 'https://fasteng-backend.vercel.app';

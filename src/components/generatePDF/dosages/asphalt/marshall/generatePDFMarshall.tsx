@@ -38,6 +38,11 @@ const GRAPH_IDS = {
 
 const SECTION_TOP_OFFSET = 10;
 
+// Resolução alvo das capturas: ~200 DPI (1 mm ≈ 7,87 px).
+// Baixe para 5.9 se quiser 150 DPI e um arquivo ainda menor.
+const TARGET_PX_PER_MM = 7.87;
+const JPEG_QUALITY = 0.85;
+
 class ChartErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
   constructor(props: { children: React.ReactNode }) {
     super(props);
@@ -59,12 +64,10 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const [openTooltip, setOpenTooltip] = useState(false);
-
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up(theme.breakpoints.values.notebook));
 
   // ===================== CÁLCULOS =====================
-
   const {
     confirmationCompressionData: storeData,
     optimumBinderContentData: storeOptimumBinder,
@@ -131,7 +134,6 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     }
 
     const VV_percent = correctedValues.vvCalculated;
-
     const massaTotalTon = ((100 - VV_percent) / 100) * liveGmm;
     const massaLiganteTon = (teorLigante / 100) * massaTotalTon;
     const massaTotalAgregadosTon = massaTotalTon - massaLiganteTon;
@@ -176,12 +178,10 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       const row: string[] = [trialValues[trial].toFixed(2)];
       const binderEntry = percentsOfDosage.flat().find((item: any) => item.trial === trial && !item.material);
       row.push(binderEntry ? Number(binderEntry.value).toFixed(2) : '---');
-
       dosage.materialSelectionData.aggregates.forEach((m: any) => {
         const entry = percentsOfDosage.flat().find((item: any) => item.trial === trial && item.material === m._id);
         row.push(entry ? Number(entry.value).toFixed(2) : '---');
       });
-
       return row;
     });
 
@@ -249,14 +249,27 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       ]
     : [];
 
-  // ===================== HTML2CANVAS MELHORADO =====================
-
-  const captureElementAsImage = async (elementId: string): Promise<string | null> => {
+  // ===================== CAPTURA DOS GRÁFICOS =====================
+  /**
+   * A escala é calculada a partir da largura que a imagem vai ocupar no PDF,
+   * e não fixada em 3. Capturar um mini-gráfico de 550px a 3x para desenhá-lo
+   * em 90mm daria 465 DPI — resolução que ninguém imprime e que só engorda o
+   * arquivo.
+   *
+   * A saída é JPEG porque o html2canvas sempre produz um canvas RGBA: ao
+   * receber PNG com alfa, o jsPDF descarta o canal e regrava o bitmap cru,
+   * sem filtro de compressão. Era isso que gerava PDFs de 50 MB.
+   */
+  const captureElementAsImage = async (elementId: string, targetWidthMM: number): Promise<string | null> => {
     const el = document.getElementById(elementId);
     if (!el) return null;
+
+    const neededPx = targetWidthMM * TARGET_PX_PER_MM;
+    const scale = Math.min(3, Math.max(1, neededPx / el.scrollWidth));
+
     try {
       const canvas = await html2canvas(el, {
-        scale: 3,
+        scale,
         backgroundColor: '#ffffff',
         logging: false,
         useCORS: true,
@@ -277,7 +290,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
           );
         },
       });
-      return canvas.toDataURL('image/png');
+      return canvas.toDataURL('image/jpeg', JPEG_QUALITY);
     } catch (err) {
       console.error(`Falha ao capturar gráfico (${elementId}):`, err);
       return null;
@@ -288,7 +301,7 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
     const props = doc.getImageProperties(imgData);
     const ratio = props.height / props.width;
     const h = maxWidthMM * ratio;
-    doc.addImage(imgData, 'PNG', x, y, maxWidthMM, h);
+    doc.addImage(imgData, 'JPEG', x, y, maxWidthMM, h);
     return h;
   };
 
@@ -296,34 +309,27 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
   const waitForGraphsRender = () => new Promise((resolve) => setTimeout(resolve, GRAPH_RENDER_DELAY_MS));
 
   // ===================== HELPERS DE LAYOUT =====================
-
   const PAGE_BOTTOM_LIMIT = 275;
 
   const addPageWithoutDate = (doc: jsPDF, image: HTMLImageElement, currentY: number, title: string): number => {
     doc.addPage();
-
     if (image) {
       const maxHeight = 7;
       const maxWidth = 35;
       const ratio = image.naturalWidth && image.naturalHeight ? image.naturalWidth / image.naturalHeight : 2;
       let width = maxHeight * ratio;
-
       if (width > maxWidth) {
         width = maxWidth;
       }
-
       doc.addImage(image, 'PNG', 10, 5, width, maxHeight);
     }
-
     doc.setFontSize(12);
     doc.setFont(undefined, 'bold');
     doc.text(title, 105, 10, { align: 'center' });
     doc.setFont(undefined, 'normal');
-
     doc.setDrawColor(242, 145, 52);
     doc.setLineWidth(0.5);
     doc.line(10, 16, 200, 16);
-
     return 22;
   };
 
@@ -375,26 +381,28 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
   };
 
   // ===================== GERAÇÃO DO PDF =====================
-
   const generatePDF = async () => {
     setLoading(true);
     try {
       await waitForGraphsRender();
 
-      // PATCH 4: Capturar dosageMain também
+      // PATCH 4: Capturar dosageMain também.
+      // Cada captura recebe a largura em mm que vai ocupar na página.
       const [granulometricImg, dosageMainImg, gmbImg, sgImg, vvImg, vamImg, rbvImg, stabilityImg] = await Promise.all([
-        captureElementAsImage(GRAPH_IDS.granulometric),
-        captureElementAsImage(GRAPH_IDS.dosageMain),
-        captureElementAsImage(GRAPH_IDS.gmb),
-        captureElementAsImage(GRAPH_IDS.sg),
-        captureElementAsImage(GRAPH_IDS.vv),
-        captureElementAsImage(GRAPH_IDS.vam),
-        captureElementAsImage(GRAPH_IDS.rbv),
-        captureElementAsImage(GRAPH_IDS.stability),
+        captureElementAsImage(GRAPH_IDS.granulometric, 190),
+        captureElementAsImage(GRAPH_IDS.dosageMain, 190),
+        captureElementAsImage(GRAPH_IDS.gmb, 90),
+        captureElementAsImage(GRAPH_IDS.sg, 90),
+        captureElementAsImage(GRAPH_IDS.vv, 90),
+        captureElementAsImage(GRAPH_IDS.vam, 90),
+        captureElementAsImage(GRAPH_IDS.rbv, 90),
+        captureElementAsImage(GRAPH_IDS.stability, 90),
       ]);
 
-      const doc = new jsPDF('p', 'mm', 'a4');
+      // compress: true liga a compressão dos streams do documento.
+      const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
       const image = (await addImageProcess(logo.src)) as HTMLImageElement;
+
       let currentY = 30;
 
       // PÁGINA 1: CAPA
@@ -420,7 +428,6 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       currentY = drawSectionTitle(doc, '1.0 - APRESENTAÇÃO', 10, currentY);
 
       const apresentacaoTexto = `Neste relatório os resultados das atividades desenvolvidas referentes à dosagem Marshall de Concreto Betuminoso Usinado a Quente - CBUQ. O presente relatório inclui os resultados de caracterização dos materiais utilizados na dosagem, o procedimento para determinação do teor ótimo de Cimento Asfáltico de Petróleo - CAP e os resultados dos ensaios mecânicos realizados neste teor.`;
-
       doc.setFontSize(10);
       const apresentacaoLines = doc.splitTextToSize(apresentacaoTexto, 190);
       doc.text(apresentacaoLines, 10, currentY);
@@ -663,9 +670,9 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       }
 
       const dosageGraphs = [gmbImg, sgImg, vvImg, vamImg, rbvImg, stabilityImg].filter(Boolean) as string[];
+
       const colWidth = 90;
       const gap = 10;
-
       const firstRowY = currentY - 35;
       const secondRowY = currentY + 20;
       const thirdRowY = currentY + 75;
@@ -673,20 +680,15 @@ const GenerateMarshallDosagePDF = ({ dosage }: IGeneratedPDF) => {
       dosageGraphs.forEach((img, idx) => {
         const col = idx % 2;
         const x = 10 + col * (colWidth + gap);
-
         const props = doc.getImageProperties(dosageGraphs[0]);
         const ratio = props.height / props.width;
         const graphHeight = colWidth * ratio;
-
         currentY = thirdRowY + graphHeight + 8;
         const h = colWidth * ratio; // mantém o tamanho original
-
         let y = firstRowY;
-
         if (idx >= 2 && idx < 4) y = secondRowY;
         if (idx >= 4) y = thirdRowY;
-
-        doc.addImage(img, 'PNG', x, y, colWidth, h);
+        doc.addImage(img, 'JPEG', x, y, colWidth, h);
       });
 
       currentY = thirdRowY + colWidth * 0.7 + 8;
