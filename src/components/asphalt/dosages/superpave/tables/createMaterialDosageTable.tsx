@@ -1,4 +1,4 @@
-import { Box, Button, MenuItem, TextField } from '@mui/material';
+﻿import { Box, Button, MenuItem, TextField } from '@mui/material';
 import { AddIcon, DeleteIcon, EditIcon } from '@/assets';
 import CreateEditMaterialModal from '@/components/templates/modals/createEditAsphaltMaterial';
 import { AsphaltMaterial } from '@/interfaces/asphalt';
@@ -89,7 +89,7 @@ const CreateMaterialDosageTable = ({ onRowClick }: ICreateMaterialDosageTable) =
     const prevMaterialsData = [...data.materials];
 
     if (material.type === 'asphaltBinder' || material.type === 'CAP') {
-      // Verifica se já existe um material do mesmo tipo
+      // Verifica se jÃ¡ existe um material do mesmo tipo
       const existingIndex = prevMaterialsData.findIndex((m) => m.type === 'asphaltBinder' || m.type === 'CAP');
 
       if (existingIndex !== -1) {
@@ -165,7 +165,7 @@ const CreateMaterialDosageTable = ({ onRowClick }: ICreateMaterialDosageTable) =
     { field: 'boughtDate', headerName: t('asphalt.materials.collectionDate') },
     {
       field: 'actions',
-      headerName: 'Ações',
+      headerName: 'AÃ§Ãµes',
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex' }}>
@@ -231,10 +231,6 @@ const CreateMaterialDosageTable = ({ onRowClick }: ICreateMaterialDosageTable) =
     }
   }, [data.materials]);
 
-<<<<<<< Updated upstream
-=======
-const [registered, setRegistered] = useState<AsphaltMaterial[]>([]);
-
 useEffect(() => {
   console.log('buscando materiais...');
   fetchMaterials()
@@ -252,10 +248,8 @@ const handleSelectRegistered = (id: string) => {
   addNewMaterial({ ...material, fromRegistry: true } as AsphaltMaterial);
 };
 
->>>>>>> Stashed changes
   return (
     <Box>
-      <DeleteMaterialModal
         isOpen={deleteModalIsOpen}
         setIsOpen={setDeleteModalIsOpen}
         rowToDelete={selectedRow}
@@ -345,7 +339,7 @@ const handleSelectRegistered = (id: string) => {
         createdMaterial={(material: AsphaltMaterial) => {
           const updatedMaterials = [...data.materials, material];
           setData({ step: 1, key: 'materials', value: updatedMaterials });
-          // chama o addNewMaterial imediatamente após inserir
+          // chama o addNewMaterial imediatamente apÃ³s inserir
           setTimeout(() => {
             addNewMaterial(material); // <-- safe para evitar race conditions do React
           }, 0);

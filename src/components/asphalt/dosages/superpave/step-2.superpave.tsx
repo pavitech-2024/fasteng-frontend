@@ -205,23 +205,9 @@ const MaterialGranulometry = ({
 /* Step 2                                                                      */
 /* -------------------------------------------------------------------------- */
 
-<<<<<<< Updated upstream
 const Superpave_Step2_GranulometryEssay = ({ setNextDisabled }: EssayPageProps & { superpave: Superpave_SERVICE }) => {
   const data = useSuperpaveStore((state) => state.granulometryEssayData);
   const setData = useSuperpaveStore((state) => state.setData);
-=======
-const Superpave_Step2_GranulometryEssay = ({
-  setNextDisabled,
-  superpave,
-}: EssayPageProps & { superpave: Superpave_SERVICE }) => {
-  const { user } = useAuth();
-const { granulometryEssayData: data, setData } = useSuperpaveStore();
-
-  const fetchMaterials = async () => {
-  if (!user?._id) return [];
-  return superpave.get_materialsByUserId(user._id);
-};
->>>>>>> Stashed changes
 
   const myRef = useRef<any>({});
   // Qual coluna foi editada por último, por material. Só decide o que preservar
