@@ -1,12 +1,13 @@
 import InputEndAdornment from '@/components/atoms/inputs/input-endAdornment';
 import { EssayPageProps } from '@/components/templates/essay';
-import useIggStore from '@/stores/asphalt/igg/igg.store';
+import { UseIggStore } from '@/stores/asphalt/igg/igg.store';
 import { Box } from '@mui/material';
 import { t } from 'i18next';
 import { useEffect } from 'react';
 
 const Igg_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { iggStep2: data, setData } = useIggStore();
+  const { generalData, setGeneralData } = UseIggStore();
+  const data = generalData;
 
   const inputs = [
     {
@@ -71,8 +72,12 @@ const Igg_Step2 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
           label={input.label}
           value={input.value}
           onChange={(e) => {
-            const formattedValue = e.target.value;
-            setData({ step: 1, key: input.key, value: formattedValue });
+            const value = e.target.value;
+
+            setGeneralData({
+              ...generalData,
+              [input.key]: value,
+            });
           }}
           adornment={''}
           sx={{ gridColumn: index % 3 === 0 ? '1' : '2' }}

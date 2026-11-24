@@ -1,11 +1,11 @@
 import { Box, Button } from '@mui/material';
 import { EssayPageProps } from '@/components/templates/essay';
-import useIggStore from '@/stores/asphalt/igg/igg.store';
+import { UseIggStore } from '@/stores/asphalt/igg/igg.store';
 import FileInput from '@/components/atoms/inputs/input-file';
 import { processFile } from '@/components/util/file';
 
 const Igg_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
-  const { setData } = useIggStore();
+  const { setStations } = UseIggStore();
 
   const processIggFile = (file: any) => {
     const processedFile = [];
@@ -64,7 +64,7 @@ const Igg_Step3 = ({ nextDisabled, setNextDisabled }: EssayPageProps) => {
     if (nextDisabled && (file.name.includes('.xlsx') || file.name.includes('.csv'))) {
       //Passa como parâmetro para o processFile o arquivo lido e o método de processamento específico do ensaio
       const processedData = await processFile(file, processIggFile);
-      setData({ step: 2, key: 'stakes', value: processedData });
+      setStations(processedData);
       setNextDisabled(false);
     }
   };
